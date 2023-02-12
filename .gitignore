@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#weight
+*.pt
+
+#
+*.mp4
+
 # C extensions
 *.so
 
