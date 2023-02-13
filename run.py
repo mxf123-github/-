@@ -11,11 +11,10 @@ import threading
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 a = detect_with_API.detectapi()
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")
-cap=cv2.VideoCapture('rtmp://169.254.50.100/live/test')
+cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
 ret, img = cap.read()
 def cap_read():
-    cap=cv2.VideoCapture('rtmp://169.254.50.100/live/test')
-    global ret,img
+    global ret,img,cap
     while 1:
         ret, img = cap.read()
         img=cv2.flip(img,-1)
