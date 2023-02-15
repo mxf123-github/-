@@ -11,8 +11,8 @@ import torch.backends.cudnn as cudnn
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class simulation_opt:
-    def __init__(self, weights='',
-                 img_size = 640, conf_thres = 0.3,
+    def __init__(self, weights='weights/last46.pt',
+                 img_size = 640, conf_thres = 0.5,
                  iou_thres = 0.45,device='', view_img= False,
                  classes = None, agnostic_nms = False,
                  augment = False, update = False, exist_ok = False):
@@ -30,8 +30,8 @@ class simulation_opt:
         self.exist_ok = exist_ok
  
 class detectapi:
-    def __init__(self, weights='weights/best44.pt', img_size=640):
-        self.opt = simulation_opt(weights=weights, img_size=img_size)
+    def __init__(self):
+        self.opt = simulation_opt()
         weights, imgsz = self.opt.weights, self.opt.img_size
         
         cudnn.benchmark = True # set True to speed up constant image size inference
