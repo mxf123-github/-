@@ -23,7 +23,7 @@ def __init__():
         # print('下拉框句柄',combobox_hwnd)
         edit_hwnd=win32gui.FindWindowEx(combobox_hwnd,0,"Edit",None)
         # print('下拉框编辑句柄',edit_hwnd)
-        win32gui.SendMessage(edit_hwnd, win32con.WM_SETTEXT, None, "COM5")  
+        win32gui.SendMessage(edit_hwnd, win32con.WM_SETTEXT, None, "COM3")  
         # 这里选择需要使用的端口
 
 def button(order):

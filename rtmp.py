@@ -4,8 +4,9 @@ import datetime
 import schedule
 import psutil,os
 cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
-fps = 30
-size=(1280,720)
+fps = 60
+# size=(1280,720)
+size=(1920,1080)
 print("fps:",fps,"size:",size)
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 location='D:\\车库入口录像\\'
@@ -28,7 +29,7 @@ change_outVideo()
 
 while 1:
     ret, frame = cap.read()
-    frame=cv2.flip(frame,-1)
+    # frame=cv2.flip(frame,-1)
     if ret:
         #在左上角标注时间
         now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
@@ -39,13 +40,14 @@ while 1:
 
         #展示Windows窗口
         cv2.namedWindow('frame',0)
+        cv2.resizeWindow("frame", 1280, 720)
         cv2.imshow("frame", frame)
 
         #计划每半小时分段录像
         schedule.run_pending()
 
         #压缩文件
-        frame=cv2.resize(frame,(1280,720))
+        # frame=cv2.resize(frame,(1280,720))
 
         #写入文件夹当中
         outVideo.write(frame)

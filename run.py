@@ -5,26 +5,29 @@ from paddleocr import PaddleOCR
 import control_cheku
 import db
 import torch
-import os
+import os,sys
 import time
 import threading
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 a = detect_with_API.detectapi()
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")
 cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
+# cap=cv2.VideoCapture('video.mp4')
 ret, img = cap.read()
 def cap_read():
     global ret,img,cap
     while 1:
         ret, img = cap.read()
-        img=cv2.flip(img,-1)
+        # img=cv2.flip(img,-1)
         if ret:
             cv2.namedWindow('frame',0)
             cv2.imshow("frame", img)
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                ret=0
                 break
         else:
             break
+            
 
 if __name__ == '__main__':
     thread1 = threading.Thread(target=cap_read,daemon=True)
