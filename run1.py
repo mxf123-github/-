@@ -11,6 +11,7 @@ import time,datetime
 import threading
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+
 #捕获视频播放
 a = detect_with_API.detectapi()
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")
@@ -20,30 +21,29 @@ cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
 ret, img = cap.read()
 rectangle_count=30
 def cap_read():
-    global ret,img,cap,rectangle_count,x1,x2,y1,y2,names,conf
+    global ret,img,cap,rectangle_count,x1,x2,y1,y2,names,conf,detect_pre_img
     while 1:
         ret, img = cap.read()
+        detect_pre_img=img[:,:]
         # img=cv2.flip(img,-1)
         if ret:
             now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
             cv2.putText(img,now_time,(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
                 (255, 255, 255), 2)
-            
+            if rectangle_count<30:    
+                cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2)
+                cv2.putText(img,str(names[cls])+'  '+str(conf),(x1,y1-20),cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 255), 2)
+                rectangle_count+=1
+            cv2.namedWindow('frame',0)
+            cv2.resizeWindow("frame", 1280, 720)
+            cv2.imshow("frame", img)
+
             #压缩文件
             # frame=cv2.resize(frame,(1280,720))
 
             #写入文件夹当中
             outVideo.write(img)
-            show_img=img
-            cv2.rectangle(show_img,(0,0),(1080,1080),(255,255,255),2)
-            if rectangle_count<30:    
-                cv2.rectangle(show_img,(x1,y1),(x2,y2),(0,255,0),2)
-                cv2.putText(show_img,str(names[cls])+'  '+str(conf),(x1,y1-20),cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 255), 2)
-                rectangle_count+=1
-            cv2.namedWindow('frame',0)
-            cv2.resizeWindow("frame", 1280, 720)
-            cv2.imshow("frame", show_img)
-
+            
             #计划每半小时分段录像
             schedule.run_pending()
 
@@ -55,7 +55,6 @@ def cap_read():
             
 thread1 = threading.Thread(target=cap_read,daemon=True)
 thread1.start()
-
 
 #录像
 fps = 30
@@ -81,6 +80,7 @@ schedule.every(30).minutes.do(change_outVideo)
 now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
 change_outVideo()
 
+
 log_license=''
 # 记录日志，并检查是否可开门
 def checkdb(license):
@@ -92,17 +92,17 @@ def checkdb(license):
     else:
         print('not pay or expired')
         if(log_license!=license):
-            db.insert_log('enter',license,0)
+            db.insert_log('leave',license,0)
 
     #确保不录入重复数据
-    if(log_license!=license):
-        log_license=license
+    log_license=license
 
 #识别
 with torch.no_grad():
     # print(ret)
+    time.sleep(1)
     while ret:
-        detect_img=img[:,0:1080]
+        detect_img=detect_pre_img[:,:]
         result,names = a.detect([detect_img])
         detect_img=result[0][0] #每一帧图片的处理结果图片
         # img=cv2.imread('test.jpg')
