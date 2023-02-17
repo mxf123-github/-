@@ -15,24 +15,26 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 #捕获视频播放
 a = detect_with_API.detectapi()
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")
-cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
+# cap=cv2.VideoCapture('rtmp://192.168.1.5/live/test')
 # cap=cv2.VideoCapture('video.mp4')
-# cap=cv2.VideoCapture('D:\DevFiles\pr\车牌测试3.mp4')
+cap=cv2.VideoCapture('D:\DevFiles\pr\车牌测试.mp4')
 ret, img = cap.read()
-rectangle_count=30
+rectangle_count=10
 def cap_read():
     global ret,img,cap,rectangle_count,x1,x2,y1,y2,names,conf,detect_pre_img
     while 1:
         ret, img = cap.read()
-        detect_pre_img=img[:,:]
         # img=cv2.flip(img,-1)
+        detect_pre_img=img[:,:]
         if ret:
             now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
             cv2.putText(img,now_time,(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
                 (255, 255, 255), 2)
-            if rectangle_count<30:    
+            if rectangle_count<10:    
                 cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2)
-                cv2.putText(img,str(names[cls])+'  '+str(conf),(x1,y1-20),cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 255), 2)
+                cv2.putText(img,str(names[cls])+'  '+str(conf),
+                            (x1,y1-20),cv2.FONT_HERSHEY_SIMPLEX,
+                            0.75, (0, 255, 255), 2)
                 rectangle_count+=1
             cv2.namedWindow('frame',0)
             cv2.resizeWindow("frame", 1280, 720)
@@ -89,13 +91,10 @@ def checkdb(license):
         control_cheku.control_cheku_action('open')
         if(log_license!=license):
             db.insert_log('enter',license,1)
+            log_license=license
     else:
         print('not pay or expired')
-        if(log_license!=license):
-            db.insert_log('leave',license,0)
 
-    #确保不录入重复数据
-    log_license=license
 
 #识别
 with torch.no_grad():

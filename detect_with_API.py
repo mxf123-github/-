@@ -11,8 +11,8 @@ import torch.backends.cudnn as cudnn
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class simulation_opt:
-    def __init__(self, weights='weights/best44.pt',
-                 img_size = 640, conf_thres = 0.2,
+    def __init__(self, weights='weights/best49.pt',
+                 img_size = 640, conf_thres = 0.5,
                  iou_thres = 0.45,device='cpu', view_img= False,
                  classes = None, agnostic_nms = False,
                  augment = False, update = False, exist_ok = False):
