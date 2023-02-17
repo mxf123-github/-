@@ -26,12 +26,16 @@ def cap_read():
         # img=cv2.flip(img,-1)
         if ret:
             now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
-            cv2.putText(img,
-            now_time,
-                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
+            cv2.putText(img,now_time,(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
                 (255, 255, 255), 2)
+            
+            #压缩文件
+            # frame=cv2.resize(frame,(1280,720))
+
+            #写入文件夹当中
+            outVideo.write(img)
             show_img=img
-            cv2.rectangle(show_img,(1,1),(1100,1079),(255,255,255),2)
+            cv2.rectangle(show_img,(0,0),(1080,1080),(255,255,255),2)
             if rectangle_count<30:    
                 cv2.rectangle(show_img,(x1,y1),(x2,y2),(0,255,0),2)
                 cv2.putText(show_img,str(names[cls])+'  '+str(conf),(x1,y1-20),cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 255), 2)
@@ -42,12 +46,6 @@ def cap_read():
 
             #计划每半小时分段录像
             schedule.run_pending()
-
-            #压缩文件
-            # frame=cv2.resize(frame,(1280,720))
-
-            #写入文件夹当中
-            outVideo.write(img)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 ret=0
@@ -83,8 +81,10 @@ schedule.every(30).minutes.do(change_outVideo)
 now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
 change_outVideo()
 
+log_license=''
 # 记录日志，并检查是否可开门
 def checkdb(license):
+    global log_license
     if(db.select(license)):
         control_cheku.control_cheku_action('open')
         if(log_license!=license):
@@ -102,7 +102,7 @@ def checkdb(license):
 with torch.no_grad():
     # print(ret)
     while ret:
-        detect_img=img[:,0:1100]
+        detect_img=img[:,0:1080]
         result,names = a.detect([detect_img])
         detect_img=result[0][0] #每一帧图片的处理结果图片
         # img=cv2.imread('test.jpg')
