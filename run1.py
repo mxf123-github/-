@@ -102,7 +102,7 @@ def checkdb(license):
     if(db.select(license)):
         control_cheku.control_cheku_action('open')
         if(log_license != license):
-            db.insert_log('enter', license, 1)
+            db.insert_log('enter', license)
             log_license = license
     else:
         print('not pay or expired')

@@ -24,11 +24,11 @@ def select(licenseNum_detected):
     return False
 
 #插入日志数据：方向，车牌，是否缴费
-def insert_log(direction,licenseNum_detected,isPay):
+def insert_log(direction,licenseNum_detected):
     conn=get_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sqltime=time.strftime('%Y-%m-%d %H:%M:%S')
-    param=(licenseNum_detected,sqltime,isPay)
+    param=(licenseNum_detected,sqltime)
     if(direction=='enter'):
         sql=str('insert into enter_cheku_log values(%s,%s,%s)')
     if(direction=='leave'):
