@@ -10,7 +10,7 @@ weights/best49.pt 还行，可以作为最终模型使用
 nginx-1.23.3.zip
 
 包含：
-nginx Windows端；vue3的前端打包放在html；车库数据库结构；Springboot的后端jar包
+nginx Windows端；vue3的前端打包放在html；数据库sql文件；Springboot的后端jar包
 
 以及非常简单的说明书
 
