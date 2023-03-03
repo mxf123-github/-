@@ -25,12 +25,12 @@ ret, img = cap.read()
 rectangle_count = 10
 
 
+
 def cap_read():
-    global ret, img, cap, rectangle_count, detect_pre_img
+    global ret, img, cap, rectangle_count
     while 1:
         ret, img = cap.read()
         # img=cv2.flip(img,-1)
-        detect_pre_img = img[:, :]
         if ret:
             now_time = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
             cv2.putText(img, now_time, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
@@ -113,8 +113,7 @@ with torch.no_grad():
     # print(ret)
     time.sleep(1)
     while ret:
-        detect_img = detect_pre_img[:, :]
-        result, names = a.detect([detect_img])
+        result, names = a.detect([img])
         detect_img = result[0][0]  # 每一帧图片的处理结果图片
         # img=cv2.imread('test.jpg')
         # 每一帧图像的识别结果（可包含多个物体）
