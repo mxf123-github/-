@@ -9,4 +9,4 @@ weights/best49.pt 还行，可以作为最终模型使用
 #2023/3/4
 nginx-1.23.3.zip，包含nginx windows端服务车库数据库springboot 后端jar包，以及非常简单的说明书
 
-有不懂的应当及时回复交流，qq号96437145
+有不懂的可以回复交流，qq号96437145
