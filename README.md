@@ -4,20 +4,13 @@
 # 2023/2/17
 weights/best49.pt 还行，可以作为最终模型使用
 
-# 不同分支有其他前端和后端方向的代码
-
 # 2023/3/4
+不同分支有其他前端和后端方向的代码
 nginx-1.23.3.zip
 
-包含nginx Windows端 
-
-vue3的前端打包放在html
-
-车库数据库结构
-
-Springboot的后端jar包
+包含：
+nginx Windows端；vue3的前端打包放在html；车库数据库结构；Springboot的后端jar包
 
 以及非常简单的说明书
-
 
 如有不理解的地方，欢迎回复交流，QQ号96437145
