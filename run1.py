@@ -76,13 +76,10 @@ def cap_read():
             # cv2.resizeWindow("frame3", 3840, 2140)
             cv2.resizeWindow("frame3", 1920, 540)
             cv2.imshow("frame3", frame3)
-            #计划每半小时分段录像
-            schedule.run_pending()
+            
             # 压缩文件
             # frame=cv2.resize(frame,(1280,720))
 
-            # 计划每半小时分段录像
-            schedule.run_pending()
             #写入文件夹当中
             outVideo3.write(frame3)
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -110,8 +107,9 @@ def main():
     global cap1,cap2,frame1_origin,frame2_origin,frame3
     cap1=cv2.VideoCapture('rtsp://admin:@192.168.1.3/stream1')
     cap2=cv2.VideoCapture('rtsp://admin:@192.168.0.105/stream1')
-    schedule.every(30).minutes.do(change_outVideo)
     change_outVideo()
+    #计划每半小时分段录像
+    schedule.every(30).minutes.do(change_outVideo)
     print('main thread is running')
     try:
         time.sleep(1)
@@ -132,6 +130,8 @@ def main():
             #     if(count==20):
             #         sys.exit(-1)
 
+                #计划循环执行
+                schedule.run_pending()
                 detect_img = np.hstack((frame1_origin, frame2_origin))
                 result, names = a.detect([detect_img])
                 detect_img = result[0][0]  # 每一帧图片的处理结果图片
@@ -164,6 +164,7 @@ def main():
                                     print('expired')
                                 else:
                                     print('not sign')
+            thread1.stopped = True
             main()
     except BaseException as e:
         print(e)
