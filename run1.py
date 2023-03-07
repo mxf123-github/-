@@ -47,7 +47,10 @@ def change_outVideo():
 
 
 def cap_read():
-    global frame1_origin,frame2_origin,frame3,ret1,ret2,cap1,cap2
+    global frame3_origin,ret1,ret2,cap1,cap2
+    change_outVideo()
+    #计划每半小时分段录像
+    schedule.every(30).minutes.do(change_outVideo)
     try:
         # count = 0
         while 1:
@@ -57,14 +60,16 @@ def cap_read():
             # print(count)
             # if(count==20):
             #     sys.exit(-1)
+            #计划循环执行
+            schedule.run_pending()
+
             ret1, frame1_origin = cap1.read()
             ret2, frame2_origin = cap2.read()
-            # frame1 = cv2.resize(frame1, (1920, 1080))
-            # frame2 = cv2.resize(frame2, (1920, 1080))
-            frame1 = cv2.resize(frame1_origin, (960, 540))
-            frame2 = cv2.resize(frame2_origin, (960, 540))
+            # frame1 = cv2.resize(frame1_origin, (960, 540))
+            # frame2 = cv2.resize(frame2_origin, (960, 540))
             # frame=cv2.flip(frame,-1)
-            frame3 = np.hstack((frame1, frame2))
+            frame3_origin = np.hstack((frame1_origin, frame2_origin))
+            frame3=cv2.resize(frame3_origin,(1920,540))
                 # 在左上角标注时间
             now_time=datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
             cv2.putText(frame3,now_time,
@@ -104,12 +109,10 @@ def close_cv2():
 
 #主函数用于检测车牌
 def main():
-    global cap1,cap2,frame1_origin,frame2_origin,frame3
+    global cap1,cap2,frame3_origin
     cap1=cv2.VideoCapture('rtsp://admin:@192.168.1.3/stream1')
     cap2=cv2.VideoCapture('rtsp://admin:@192.168.0.105/stream1')
-    change_outVideo()
-    #计划每半小时分段录像
-    schedule.every(30).minutes.do(change_outVideo)
+    
     print('main thread is running')
     try:
         time.sleep(1)
@@ -130,10 +133,11 @@ def main():
             #     if(count==20):
             #         sys.exit(-1)
 
-                #计划循环执行
-                schedule.run_pending()
-                detect_img = np.hstack((frame1_origin, frame2_origin))
-                result, names = a.detect([detect_img])
+                
+                # detect_img = np.hstack((frame1_origin, frame2_origin))
+                # result, names = a.detect([frame1_origin])
+                # detect_img = np.hstack((frame1_origin, frame2_origin))
+                result, names = a.detect([frame3_origin])
                 detect_img = result[0][0]  # 每一帧图片的处理结果图片
                 # img=cv2.imread('test.jpg')
                 # 每一帧图像的识别结果（可包含多个物体）
@@ -142,10 +146,10 @@ def main():
                     print(names[cls], x1, y1, x2, y2, conf)
                     # print()#将每一帧的结果输出分开
                     target_img = detect_img[y1:y2, x1:x2]
-                    cv2.rectangle(frame3, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    cv2.putText(frame3, str(names[cls])+'  '+str(conf),
-                                (x1, y1-20), cv2.FONT_HERSHEY_SIMPLEX,
-                                0.75, (0, 255, 255), 2)
+                    # cv2.rectangle(frame3, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    # cv2.putText(frame3, str(names[cls])+'  '+str(conf),
+                    #             (x1, y1-20), cv2.FONT_HERSHEY_SIMPLEX,
+                    #             0.75, (0, 255, 255), 2)
                     # cv2.namedWindow('license',0) 
                     # cv2.resizeWindow("license",int((x2-x1)/2),int((y2-y1)/2))
                     # cv2.imshow('license',target_img)
